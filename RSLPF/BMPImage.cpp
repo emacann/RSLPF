@@ -4,11 +4,11 @@ BMPImage::BMPImage() { this->data = nullptr; this->fileHeader = nullptr; this->i
 
 BMPImage::BMPImage(const uint32_t width, const uint32_t height, const RGBPIXEL* color) {
 
-	char* buffer = new char[width*height*3];
+	char* buffer = new char[width*height*3 + 54];
 
 	this->fileHeader = (BMPFILEHEADER*) &buffer[0];
 	this->infoHeader = (BMPINFOHEADER*) &buffer[14];
-	this->data = (RGBPIXEL*) &buffer[40];
+	this->data = (RGBPIXEL*) &buffer[54];
 
 	createHeaders(width, height);
 
@@ -58,7 +58,7 @@ bool BMPImage::fromFile(const char* fileName)
 
 	this->fileHeader = (BMPFILEHEADER*) &buffer[0];
 	this->infoHeader = (BMPINFOHEADER*) &buffer[14];
-	this->data = (RGBPIXEL*) &buffer[40];
+	this->data = (RGBPIXEL*) &buffer[54];
 
 	file.close();
 

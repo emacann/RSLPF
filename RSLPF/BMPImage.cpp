@@ -26,6 +26,24 @@ BMPImage::BMPImage(const char* fileName)
 	this->fromFile(fileName);
 }
 
+BMPImage::~BMPImage() {
+
+	if (this->fileHeader != nullptr) {
+		delete this->fileHeader;
+		this->fileHeader = nullptr;
+	}
+
+	if (this->infoHeader != nullptr) {
+		delete this->infoHeader;
+		this->infoHeader = nullptr;
+	}
+
+	if (this->data != nullptr) {
+		delete[] this->data;
+		this->data = nullptr;
+	}
+}
+
 void BMPImage::createHeaders(const char* buffer) {
 
 	this->fileHeader = new BMPFILEHEADER;
@@ -96,8 +114,10 @@ void BMPImage::headerToBuffer(char* buffer) {
 
 }
 
-bool BMPImage::fromFile(const char* fileName)
-{
+bool BMPImage::fromFile(const char* fileName) {
+
+	BMPImage::~BMPImage();
+
 	std::ifstream file;
 
 	file.open(fileName, std::fstream::in | std::fstream::binary);
@@ -120,8 +140,8 @@ bool BMPImage::fromFile(const char* fileName)
 	return(true);
 }
 
-bool BMPImage::toFile(const char* fileName)
-{
+bool BMPImage::toFile(const char* fileName) {
+
 	std::ofstream file;
 
 	file.open(fileName, std::fstream::out | std::fstream::binary);

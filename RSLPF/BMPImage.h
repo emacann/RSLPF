@@ -51,6 +51,7 @@ public:
 	BMPImage();
 	BMPImage(const int32_t width, const int32_t height, const RGBPIXEL& color);
 	BMPImage(const char* fileName);
+	~BMPImage();
 
 	bool fromFile(const char* fileName);
 	bool toFile(const char* fileName);

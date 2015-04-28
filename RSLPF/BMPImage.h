@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstdint>
+#include <assert.h>
 
 #define BMPTYPE 19778
 #define RGB_LOSSLESS 0
@@ -28,9 +29,9 @@ typedef struct {
 } BMPINFOHEADER;
 
 typedef struct {
-	uint8_t B;
-	uint8_t G;
-	uint8_t R;
+	unsigned char B;
+	unsigned char G;
+	unsigned char R;
 } RGBPIXEL;
 
 class BMPImage {
@@ -43,13 +44,23 @@ private:
 	void createHeaders(int32_t width, int32_t height, uint16_t bits = 24, uint32_t compression = RGB_LOSSLESS);
 
 	void headerToBuffer(char* dest);
+	
+	void setRow(const int x, const int y, const int length, const RGBPIXEL& color);
+	unsigned int w, h;
 public:
 	BMPImage();
-	BMPImage(const int32_t width, const int32_t height, const RGBPIXEL* color);
+	BMPImage(const int32_t width, const int32_t height, const RGBPIXEL& color);
+	BMPImage(const char* filename);
 
 	bool fromFile(const char* fileName);
 	bool toFile(const char* fileName);
 	
+
+	RGBPIXEL getPixel(const unsigned int x, const unsigned int y);
+	void setPixel(const int x, const int y);
+
+
+	void drawRectangle(int x1, int y1, int x2, int y2, const RGBPIXEL& color);
 	// TODOs.
 	/*
 	

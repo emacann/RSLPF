@@ -1,16 +1,37 @@
 #include "BMPImage.h"
 
-BMPImage::BMPImage() { this->data = nullptr; this->fileHeader = nullptr; this->infoHeader = nullptr; }
+BMPImage::BMPImage() { 
+	
+	assert(sizeof(RGBPIXEL) == 3);
 
-BMPImage::BMPImage(const int32_t width, const int32_t height, const RGBPIXEL* color) {
+	this->data = nullptr;
+	this->fileHeader = nullptr;
+	this->infoHeader = nullptr;
 
+}
+
+BMPImage::BMPImage(const int32_t width, const int32_t height, const RGBPIXEL& color)
+{
+	BMPImage();
 	createHeaders(width, height);
+
+	this->w = width;
+	this->h = height;
 
 	this->data = new RGBPIXEL[width * height];
 
 	for (uint32_t i = 0; i < width * height; i++)
-		std::memcpy((void*) &this->data[i], color, 3);
+		this->data[i] = color;
 }
+
+BMPImage::BMPImage(const char* fname)
+{
+	BMPImage();
+
+	this->fromFile(fname);
+}
+
+
 
 void BMPImage::createHeaders(const char* buffer) {
 
@@ -96,12 +117,15 @@ bool BMPImage::fromFile(const char* fileName)
 	char* buffer = new char[54];
 	file.read(buffer, 54);
 	createHeaders(buffer);
-	delete [] buffer;
+	delete[] buffer;
 	
 	this->data = new RGBPIXEL[this->infoHeader->imageSize];
 	file.read((char*) this->data, this->infoHeader->imageSize);
 
 	file.close();
+
+	this->w = this->infoHeader->width;
+	this->h = this->infoHeader->height;
 
 	return(true);
 }
@@ -127,4 +151,21 @@ bool BMPImage::toFile(const char* fileName)
 	file.close();
 	
 	return(true);
+}
+
+void BMPImage::drawRectangle(int x1, int y1, int x2, int y2, const RGBPIXEL& color)
+{
+	//Controlli vari
+	if (this->data == nullptr) return;
+	if (x1 < 0) x1 = 0;
+	if (x1 >= this->w) x1 = this->w - 1;
+	if (x2 < 0) x2 = 0;
+	if (x2 >= this->w) x2 = this->w - 1;
+	if (y1 < 0) y1 = 0;
+	if (y1 >= this->h) y1 = this->h - 1;
+	if (y2 < 0) y2 = 0;
+	if (y2 > this->h) y2 = this->h - 1;
+
+	//disegna il rettangolo
+
 }

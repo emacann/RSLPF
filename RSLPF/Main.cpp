@@ -9,13 +9,13 @@ int main(int argc, char* argv[])
 	color.R = 255;
 	color.G = 0;
 
-	BMPImage* prova = new BMPImage("out.bmp");
+//	BMPImage* prova = new BMPImage("Samples/in.bmp");
 
-//	BMPImage* prova = new BMPImage();
+	BMPImage* prova = new BMPImage(1024, 768, color);
 
 //	prova->fromFile("Samples/in.bmp");
 
-	prova->toFile("asd.bmp");
+	prova->toFile("Samples/out.bmp");
 
 	return(0);
 }

@@ -7,31 +7,24 @@ BMPImage::BMPImage() {
 	this->data = nullptr;
 	this->fileHeader = nullptr;
 	this->infoHeader = nullptr;
-
 }
 
-BMPImage::BMPImage(const int32_t width, const int32_t height, const RGBPIXEL& color)
-{
+BMPImage::BMPImage(const int32_t width, const int32_t height, const RGBPIXEL& color) {
+
 	BMPImage();
 	createHeaders(width, height);
 
-	this->w = width;
-	this->h = height;
-
 	this->data = new RGBPIXEL[width * height];
 
-	for (uint32_t i = 0; i < width * height; i++)
+	for (int64_t i = 0; i < width * height; i++)
 		this->data[i] = color;
 }
 
-BMPImage::BMPImage(const char* fname)
+BMPImage::BMPImage(const char* fileName)
 {
 	BMPImage();
-
-	this->fromFile(fname);
+	this->fromFile(fileName);
 }
-
-
 
 void BMPImage::createHeaders(const char* buffer) {
 
@@ -124,9 +117,6 @@ bool BMPImage::fromFile(const char* fileName)
 
 	file.close();
 
-	this->w = this->infoHeader->width;
-	this->h = this->infoHeader->height;
-
 	return(true);
 }
 
@@ -153,19 +143,26 @@ bool BMPImage::toFile(const char* fileName)
 	return(true);
 }
 
-void BMPImage::drawRectangle(int x1, int y1, int x2, int y2, const RGBPIXEL& color)
-{
-	//Controlli vari
-	if (this->data == nullptr) return;
-	if (x1 < 0) x1 = 0;
-	if (x1 >= this->w) x1 = this->w - 1;
-	if (x2 < 0) x2 = 0;
-	if (x2 >= this->w) x2 = this->w - 1;
-	if (y1 < 0) y1 = 0;
-	if (y1 >= this->h) y1 = this->h - 1;
-	if (y2 < 0) y2 = 0;
-	if (y2 > this->h) y2 = this->h - 1;
+bool BMPImage::drawRectangle(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const RGBPIXEL& color) {
 
-	//disegna il rettangolo
+	if (isValid(x1, y1) && isValid(x2, y2)) {
 
+		// Disegna il rettangolo.
+
+
+		return(true);
+	}
+
+	return(false);
+}
+
+bool BMPImage::isValid(int32_t x, int32_t y) {
+
+	if (this->data == nullptr)
+		return(false);
+
+	if (x < 0 || x >= this->infoHeader->width || y < 0 || y >= this->infoHeader->height)
+		return(false);
+
+	return(true);
 }

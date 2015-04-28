@@ -29,12 +29,13 @@ typedef struct {
 } BMPINFOHEADER;
 
 typedef struct {
-	unsigned char B;
-	unsigned char G;
-	unsigned char R;
+	uint8_t B;
+	uint8_t G;
+	uint8_t R;
 } RGBPIXEL;
 
 class BMPImage {
+
 private:
 	BMPFILEHEADER* fileHeader;
 	BMPINFOHEADER* infoHeader;
@@ -42,28 +43,23 @@ private:
 
 	void createHeaders(const char* buffer);
 	void createHeaders(int32_t width, int32_t height, uint16_t bits = 24, uint32_t compression = RGB_LOSSLESS);
-
 	void headerToBuffer(char* dest);
-	
-	void setRow(const int x, const int y, const int length, const RGBPIXEL& color);
-	unsigned int w, h;
+	void setRow(const int32_t x, const int32_t y, const int32_t length, const RGBPIXEL& color);
+	bool isValid(int32_t x, int32_t y);
+
 public:
 	BMPImage();
 	BMPImage(const int32_t width, const int32_t height, const RGBPIXEL& color);
-	BMPImage(const char* filename);
+	BMPImage(const char* fileName);
 
 	bool fromFile(const char* fileName);
 	bool toFile(const char* fileName);
-	
 
-	RGBPIXEL getPixel(const unsigned int x, const unsigned int y);
-	void setPixel(const int x, const int y);
-
-
-	void drawRectangle(int x1, int y1, int x2, int y2, const RGBPIXEL& color);
+	bool drawRectangle(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const RGBPIXEL& color);
 	// TODOs.
 	/*
-	
+	RGBPIXEL getPixel(const int32_t x, const int32_t y);
+	void setPixel(const int32_t x, const int32_t y);
 	void set(const unsigned int x, const unsigned int y, const RGBcol color); //unsigned int per evitare check inutili
 	RGBcol get(const unsigned int x, const unsigned int y);
 	void Clear(const RGBcol color);

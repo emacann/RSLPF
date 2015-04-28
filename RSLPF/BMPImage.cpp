@@ -30,7 +30,7 @@ void BMPImage::createHeaders(int32_t width, int32_t height, uint16_t bits, uint3
 	(*infoHeader).planes = 1;
 	(*infoHeader).bits = bits;
 	(*infoHeader).compression = compression;
-	(*infoHeader).imageSize = width * height;
+	(*infoHeader).imageSize = width * height * (bits / 3);
 	(*infoHeader).xRes = 0;
 	(*infoHeader).yRes = 0;
 	(*infoHeader).clrUsed = 0;

@@ -12,19 +12,21 @@ typedef struct {
 	uint16_t reserved2;				// Reserved.
 	uint32_t offset;				// Bytes before image data.
 } BMPFILEHEADER;
+
 typedef struct {
 	uint32_t headerSize;			// Header size in bytes.
-	uint32_t width;					// Image width.
-	uint32_t height;				// Image height;
+	int32_t width;					// Image width.
+	int32_t height;					// Image height;
 	uint16_t planes;				// Number of colour planes.
 	uint16_t bits;					// Bits per pixel.
 	uint32_t compression;			// Compression type.
 	uint32_t imageSize;				// Image size in bytes.
-	uint32_t xRes;					// X Pixel per meter.
-	uint32_t yRes;					// Y Pixel per meter.
+	int32_t xRes;					// X Pixel per meter.
+	int32_t yRes;					// Y Pixel per meter.
 	uint32_t clrUsed;				// Number of colours.
 	uint32_t clrImportant;			// Important colours.
 } BMPINFOHEADER;
+
 typedef struct {
 	uint8_t B;
 	uint8_t G;
@@ -37,7 +39,7 @@ private:
 	BMPINFOHEADER* infoHeader;
 	RGBPIXEL* data;
 
-	void createHeaders(uint32_t width, uint32_t height, uint16_t bits = 24, uint32_t compression = RGB_LOSSLESS);
+	void createHeaders(int32_t width, int32_t height, uint16_t bits = 24, uint32_t compression = RGB_LOSSLESS);
 public:
 	BMPImage();
 	BMPImage(const uint32_t width, const uint32_t height, const RGBPIXEL* color);

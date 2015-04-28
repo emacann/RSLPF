@@ -1,6 +1,7 @@
 #include "BMPImage.h"
 
 BMPImage::BMPImage() { this->data = nullptr; this->fileHeader = nullptr; this->infoHeader = nullptr; }
+
 BMPImage::BMPImage(const uint32_t width, const uint32_t height, const RGBPIXEL* color) {
 
 	createHeaders(width, height);
@@ -11,7 +12,7 @@ BMPImage::BMPImage(const uint32_t width, const uint32_t height, const RGBPIXEL* 
 		data[i] = *color;
 }
 
-void BMPImage::createHeaders(uint32_t width, uint32_t height, uint16_t bits, uint32_t compression) {
+void BMPImage::createHeaders(int32_t width, int32_t height, uint16_t bits, uint32_t compression) {
 	
 	static BMPFILEHEADER fileHeader;
 	static BMPINFOHEADER infoHeader;
@@ -40,7 +41,7 @@ void BMPImage::createHeaders(uint32_t width, uint32_t height, uint16_t bits, uin
 
 bool BMPImage::fromFile(const char* fileName)
 {
-	std::fstream file;
+	std::ifstream file;
 
 	file.open(fileName, std::fstream::in | std::fstream::binary);
 
@@ -67,6 +68,7 @@ bool BMPImage::fromFile(const char* fileName)
 
 	return(true);
 }
+
 bool BMPImage::toFile(const char* fileName)
 {
 	std::ofstream file;

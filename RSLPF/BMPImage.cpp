@@ -158,7 +158,7 @@ bool BMPImage::drawRectangle(int32_t x1, int32_t y1, int32_t x2, int32_t y2, con
 
 bool BMPImage::isValid(int32_t x, int32_t y) {
 
-	if (this->data == nullptr)
+	if (this->fileHeader == nullptr || this->infoHeader == nullptr || this->data == nullptr)
 		return(false);
 
 	if (x < 0 || x >= this->infoHeader->width || y < 0 || y >= this->infoHeader->height)

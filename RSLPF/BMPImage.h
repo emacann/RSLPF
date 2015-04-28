@@ -39,10 +39,13 @@ private:
 	BMPINFOHEADER* infoHeader;
 	RGBPIXEL* data;
 
+	void createHeaders(const char* buffer);
 	void createHeaders(int32_t width, int32_t height, uint16_t bits = 24, uint32_t compression = RGB_LOSSLESS);
+
+	void headerToBuffer(char* dest);
 public:
 	BMPImage();
-	BMPImage(const uint32_t width, const uint32_t height, const RGBPIXEL* color);
+	BMPImage(const int32_t width, const int32_t height, const RGBPIXEL* color);
 
 	bool fromFile(const char* fileName);
 	bool toFile(const char* fileName);

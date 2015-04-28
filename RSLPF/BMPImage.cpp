@@ -2,39 +2,84 @@
 
 BMPImage::BMPImage() { this->data = nullptr; this->fileHeader = nullptr; this->infoHeader = nullptr; }
 
-BMPImage::BMPImage(const uint32_t width, const uint32_t height, const RGBPIXEL* color) {
-
-	char* buffer = new char[width*height*3 + 54];
-
-	this->fileHeader = (BMPFILEHEADER*) &buffer[0];
-	this->infoHeader = (BMPINFOHEADER*) &buffer[14];
-	this->data = (RGBPIXEL*) &buffer[54];
+BMPImage::BMPImage(const int32_t width, const int32_t height, const RGBPIXEL* color) {
 
 	createHeaders(width, height);
 
+	this->data = new RGBPIXEL[width * height];
+
 	for (uint32_t i = 0; i < width * height; i++)
-		data[i] = *color;
+		std::memcpy((void*) &this->data[i], color, 3);
+}
+
+void BMPImage::createHeaders(const char* buffer) {
+
+	this->fileHeader = new BMPFILEHEADER;
+	this->infoHeader = new BMPINFOHEADER;
+
+	std::memcpy((void*) &this->fileHeader->type, &buffer[0], 2);
+	std::memcpy((void*) &this->fileHeader->size, &buffer[2], 4);
+	std::memcpy((void*) &this->fileHeader->reserved1, &buffer[6], 2);
+	std::memcpy((void*) &this->fileHeader->reserved2, &buffer[8], 2);
+	std::memcpy((void*) &this->fileHeader->offset, &buffer[10], 4);
+
+	std::memcpy((void*) &this->infoHeader->headerSize, &buffer[14], 4);
+	std::memcpy((void*) &this->infoHeader->width, &buffer[18], 4);
+	std::memcpy((void*) &this->infoHeader->height, &buffer[22], 4);
+	std::memcpy((void*) &this->infoHeader->planes, &buffer[26], 2);
+	std::memcpy((void*) &this->infoHeader->bits, &buffer[28], 2);
+	std::memcpy((void*) &this->infoHeader->compression, &buffer[30], 4);
+	std::memcpy((void*) &this->infoHeader->imageSize, &buffer[34], 4);
+	std::memcpy((void*) &this->infoHeader->xRes, &buffer[38], 4);
+	std::memcpy((void*) &this->infoHeader->yRes, &buffer[42], 4);
+	std::memcpy((void*) &this->infoHeader->clrUsed, &buffer[46], 4);
+	std::memcpy((void*) &this->infoHeader->clrImportant, &buffer[50], 4);
 }
 
 void BMPImage::createHeaders(int32_t width, int32_t height, uint16_t bits, uint32_t compression) {
-	
-	(*fileHeader).type = BMPTYPE;								// Standard bitmap file.
-	(*fileHeader).size = width * height * (bits / 3) + 54;
-	(*fileHeader).reserved1 = 0;
-	(*fileHeader).reserved2 = 0;
-	(*fileHeader).offset = 54;
 
-	(*infoHeader).headerSize = 40;
-	(*infoHeader).width = width;
-	(*infoHeader).height = height;
-	(*infoHeader).planes = 1;
-	(*infoHeader).bits = bits;
-	(*infoHeader).compression = compression;
-	(*infoHeader).imageSize = width * height * (bits / 3);
-	(*infoHeader).xRes = 0;
-	(*infoHeader).yRes = 0;
-	(*infoHeader).clrUsed = 0;
-	(*infoHeader).clrImportant = 0;								// All colors are important.
+	this->fileHeader = new BMPFILEHEADER;
+	this->infoHeader = new BMPINFOHEADER;
+
+	this->fileHeader->type = BMPTYPE;								// Standard bitmap file.
+	this->fileHeader->size = width * height * (bits / 8) + 54;
+	this->fileHeader->reserved1 = 0;
+	this->fileHeader->reserved2 = 0;
+	this->fileHeader->offset = 54;
+
+	this->infoHeader->headerSize = 40;
+	this->infoHeader->width = width;
+	this->infoHeader->height = height;
+	this->infoHeader->planes = 1;
+	this->infoHeader->bits = bits;
+	this->infoHeader->compression = compression;
+	this->infoHeader->imageSize = width * height * (bits / 8);
+	this->infoHeader->xRes = 0;
+	this->infoHeader->yRes = 0;
+	this->infoHeader->clrUsed = 0;
+	this->infoHeader->clrImportant = 0;								// All colors are important.
+}
+
+void BMPImage::headerToBuffer(char* buffer) {
+
+	std::memcpy(&buffer[0], &this->fileHeader->type, 2);
+	std::memcpy(&buffer[2], &this->fileHeader->size, 4);
+	std::memcpy(&buffer[6], &this->fileHeader->reserved1, 2);
+	std::memcpy(&buffer[8], &this->fileHeader->reserved2, 2);
+	std::memcpy(&buffer[10], &this->fileHeader->offset, 4);
+
+	std::memcpy(&buffer[14], &this->infoHeader->headerSize, 4);
+	std::memcpy(&buffer[18], &this->infoHeader->width, 4);
+	std::memcpy(&buffer[22], &this->infoHeader->height, 4);
+	std::memcpy(&buffer[26], &this->infoHeader->planes, 2);
+	std::memcpy(&buffer[28], &this->infoHeader->bits, 2);
+	std::memcpy(&buffer[30], &this->infoHeader->compression, 4);
+	std::memcpy(&buffer[34], &this->infoHeader->imageSize, 4);
+	std::memcpy(&buffer[38], &this->infoHeader->xRes, 4);
+	std::memcpy(&buffer[42], &this->infoHeader->yRes, 4);
+	std::memcpy(&buffer[46], &this->infoHeader->clrUsed, 4);
+	std::memcpy(&buffer[50], &this->infoHeader->clrImportant, 4);
+
 }
 
 bool BMPImage::fromFile(const char* fileName)
@@ -48,21 +93,15 @@ bool BMPImage::fromFile(const char* fileName)
 		return(false);
 	}
 
-	file.seekg(0, file.end);
-	uint32_t length = (uint32_t) file.tellg();
-	file.seekg(0, file.beg);
-
-	char* buffer = new char[length];
-
-	file.read(buffer, length);
-
-	this->fileHeader = (BMPFILEHEADER*) &buffer[0];
-	this->infoHeader = (BMPINFOHEADER*) &buffer[14];
-	this->data = (RGBPIXEL*) &buffer[54];
+	char* buffer = new char[54];
+	file.read(buffer, 54);
+	createHeaders(buffer);
+	delete [] buffer;
+	
+	this->data = new RGBPIXEL[this->infoHeader->imageSize];
+	file.read((char*) this->data, this->infoHeader->imageSize);
 
 	file.close();
-
-	(*fileHeader).size = length;
 
 	return(true);
 }
@@ -78,9 +117,14 @@ bool BMPImage::toFile(const char* fileName)
 		return(false);
 	}
 
-	file.write((char*) this->fileHeader, (*fileHeader).size);
+	char* buffer = new char[54];
+	headerToBuffer(buffer);
+	file.write(buffer, 54);
+	delete[] buffer;
+
+	file.write((char*) this->data, this->infoHeader->imageSize);
 
 	file.close();
-
+	
 	return(true);
 }

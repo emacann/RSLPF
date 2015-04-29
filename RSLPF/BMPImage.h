@@ -56,15 +56,15 @@ public:
 	bool fromFile(const char* fileName);
 	bool toFile(const char* fileName);
 
+	RGBPIXEL& getPixel(const int32_t x, const int32_t y);
+	bool setPixel(const int32_t x, const int32_t y, const RGBPIXEL& color);
+
+	void Clear(const RGBPIXEL& color);
+	void Clear();		//clear black
+
 	bool drawRectangle(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const RGBPIXEL& color);
 	// TODOs.
-	/*
-	RGBPIXEL getPixel(const int32_t x, const int32_t y);
-	void setPixel(const int32_t x, const int32_t y);
-	void set(const unsigned int x, const unsigned int y, const RGBcol color); //unsigned int per evitare check inutili
-	RGBcol get(const unsigned int x, const unsigned int y);
-	void Clear(const RGBcol color);
-	void Clear(); //clear black
+	/*	
 	void drawLine(const int x0, const int y0, const  int x1, const  int y1, const RGBcol color);  //const int invece di unsigned int per permettere di iniziare le righe anche fuori dall'immagine 
 	void negative();
 	void contrastEmphasis(const unsigned char min, const unsigned char max);

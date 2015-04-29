@@ -16,8 +16,7 @@ BMPImage::BMPImage(const int32_t width, const int32_t height, const RGBPIXEL& co
 
 	this->data = new RGBPIXEL[width * height];
 
-	for (int64_t i = 0; i < width * height; i++)
-		this->data[i] = color;
+	Clear(color);
 }
 
 BMPImage::BMPImage(const char* fileName)
@@ -185,4 +184,43 @@ bool BMPImage::isValid(int32_t x, int32_t y) {
 		return(false);
 
 	return(true);
+}
+
+RGBPIXEL& BMPImage::getPixel(const int32_t x, const int32_t y) {
+
+	if (isValid(x, y)){
+		return(this->data[x + (this->infoHeader->height - y) * this->infoHeader->width]);
+	}
+
+	// È necessario decidere cosa ritornare se il punto è al di fuori dell'immagine.
+}
+
+bool BMPImage::setPixel(const int32_t x, const int32_t y, const RGBPIXEL& color) {
+
+	if (isValid(x, y)) {
+		this->data[x + (this->infoHeader->height - y) * this->infoHeader->width] = color;
+		return(true);
+	}
+
+	return(false);
+}
+
+void BMPImage::Clear() {
+
+	if (this->fileHeader != nullptr && this->infoHeader != nullptr && this->data != nullptr) {
+		for (int64_t i = 0; i < this->infoHeader->width * this->infoHeader->height; i++) {
+			this->data[i].B = 0;
+			this->data[i].R = 0;
+			this->data[i].G = 0;
+		}
+	}
+}
+
+void BMPImage::Clear(const RGBPIXEL& color) {
+
+	if (this->fileHeader != nullptr && this->infoHeader != nullptr && this->data != nullptr) {
+		for (int64_t i = 0; i < this->infoHeader->width * this->infoHeader->height; i++) {
+			this->data[i] = color;
+		}
+	}
 }

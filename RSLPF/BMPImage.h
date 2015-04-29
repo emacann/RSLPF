@@ -56,7 +56,7 @@ public:
 	bool fromFile(const char* fileName);
 	bool toFile(const char* fileName);
 
-	RGBPIXEL& getPixel(const int32_t x, const int32_t y);
+	RGBPIXEL getPixel(const int32_t x, const int32_t y);
 	bool setPixel(const int32_t x, const int32_t y, const RGBPIXEL& color);
 
 	void Clear(const RGBPIXEL& color);

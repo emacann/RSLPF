@@ -186,13 +186,15 @@ bool BMPImage::isValid(int32_t x, int32_t y) {
 	return(true);
 }
 
-RGBPIXEL& BMPImage::getPixel(const int32_t x, const int32_t y) {
+RGBPIXEL BMPImage::getPixel(const int32_t x, const int32_t y) {
 
-	if (isValid(x, y)){
+	if (isValid(x, y)) {
 		return(this->data[x + (this->infoHeader->height - y) * this->infoHeader->width]);
 	}
 
-	// È necessario decidere cosa ritornare se il punto è al di fuori dell'immagine.
+	RGBPIXEL black;
+	black.R = 0; black.G = 0; black.B = 0;
+	return (black);
 }
 
 bool BMPImage::setPixel(const int32_t x, const int32_t y, const RGBPIXEL& color) {

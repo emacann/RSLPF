@@ -2,18 +2,15 @@
 
 int main(int argc, char* argv[])
 {
+	BMPImage* prova = new BMPImage("Samples/in.bmp");
 
-	RGBPIXEL color;
+	RGBPIXEL color = prova->getPixel(-1, 15);
 
-	color.B = 0;
-	color.R = 255;
-	color.G = 0;
+	delete prova; // Non sono sicuro del funzionamento di questo comando.
 
-//	BMPImage* prova = new BMPImage("Samples/in.bmp");
+	prova = new BMPImage(1024, 768, color);
 
-	BMPImage* prova = new BMPImage(1024, 768, color);
-
-	prova->fromFile("Samples/in.bmp");
+//	prova->fromFile("Samples/in.bmp");
 
 	prova->toFile("Samples/out.bmp");
 

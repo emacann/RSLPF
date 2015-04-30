@@ -10,6 +10,13 @@ int main(int argc, char* argv[])
 
 	prova = new BMPImage(1024, 768, color);
 
+
+	Sequence<float> seq;
+	seq << 32.0f << 3.5;
+	for (int i = 0; i < seq.getLength(); i++)
+	{
+		std::cout << seq[i] << " | ";
+	}
 //	prova->fromFile("Samples/in.bmp");
 
 	prova->toFile("Samples/out.bmp");

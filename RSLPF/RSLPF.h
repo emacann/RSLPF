@@ -2,6 +2,6 @@
 #define RSLPF_H 0x416E74616E
 
 #include "BMPImage.h"
-#include "RSLPF.h"
+#include "Sequence.h"
 
-#endif // !RSLPF_H
+#endif

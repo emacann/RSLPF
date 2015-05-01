@@ -29,7 +29,9 @@ typedef struct {
 } BMPINFOHEADER;
 
 typedef struct {
-	unsigned char B,G,R;
+	uint8_t B;
+	uint8_t R;
+	uint8_t G;
 } RGBPIXEL;
 
 class BMPImage {

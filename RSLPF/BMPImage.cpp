@@ -4,12 +4,12 @@ BMPImage::BMPImage() {
 	
 	assert(sizeof(RGBPIXEL) == 3);
 
-	this->data = nullptr;
-	this->fileHeader = nullptr;
-	this->infoHeader = nullptr;
+	this->data = NULL;
+	this->fileHeader = NULL;
+	this->infoHeader = NULL;
 }
 
-BMPImage::BMPImage(const int32_t width, const int32_t height, const RGBPIXEL& color) {
+BMPImage::BMPImage(const int32 width, const int32 height, const RGBPIXEL& color) {
 
 	BMPImage();
 	createHeaders(width, height);
@@ -27,19 +27,19 @@ BMPImage::BMPImage(const char* fileName)
 
 BMPImage::~BMPImage() {
 
-	if (this->fileHeader != nullptr) {
+	if (this->fileHeader != NULL) {
 		delete this->fileHeader;
-		this->fileHeader = nullptr;
+		this->fileHeader = NULL;
 	}
 
-	if (this->infoHeader != nullptr) {
+	if (this->infoHeader != NULL) {
 		delete this->infoHeader;
-		this->infoHeader = nullptr;
+		this->infoHeader = NULL;
 	}
 
-	if (this->data != nullptr) {
+	if (this->data != NULL) {
 		delete[] this->data;
-		this->data = nullptr;
+		this->data = NULL;
 	}
 }
 
@@ -67,7 +67,7 @@ void BMPImage::createHeaders(const char* buffer) {
 	std::memcpy((void*) &this->infoHeader->clrImportant, &buffer[50], 4);
 }
 
-void BMPImage::createHeaders(int32_t width, int32_t height, uint16_t bits, uint32_t compression) {
+void BMPImage::createHeaders(int32 width, int32 height, uint16 bits, uint32 compression) {
 
 	this->fileHeader = new BMPFILEHEADER;
 	this->infoHeader = new BMPINFOHEADER;
@@ -162,7 +162,7 @@ bool BMPImage::toFile(const char* fileName) {
 	return(true);
 }
 
-bool BMPImage::drawRectangle(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const RGBPIXEL& color) {
+bool BMPImage::drawRectangle(int32 x1, int32 y1, int32 x2, int32 y2, const RGBPIXEL& color) {
 
 	if (isValid(x1, y1) && isValid(x2, y2)) {
 
@@ -175,9 +175,9 @@ bool BMPImage::drawRectangle(int32_t x1, int32_t y1, int32_t x2, int32_t y2, con
 	return(false);
 }
 
-inline bool BMPImage::isValid(int32_t x, int32_t y) {
+inline bool BMPImage::isValid(int32 x, int32 y) {
 
-	if (this->fileHeader == nullptr || this->infoHeader == nullptr || this->data == nullptr)
+	if (this->fileHeader == NULL || this->infoHeader == NULL || this->data == NULL)
 		return(false);
 
 	if (x < 0 || x >= this->infoHeader->width || y < 0 || y >= this->infoHeader->height)
@@ -186,7 +186,7 @@ inline bool BMPImage::isValid(int32_t x, int32_t y) {
 	return(true);
 }
 
-RGBPIXEL BMPImage::getPixel(const int32_t x, const int32_t y) {
+RGBPIXEL BMPImage::getPixel(const int32 x, const int32 y) {
 
 	if (isValid(x, y)) {
 		return(this->data[x + (this->infoHeader->height - y) * this->infoHeader->width]);
@@ -197,7 +197,7 @@ RGBPIXEL BMPImage::getPixel(const int32_t x, const int32_t y) {
 	return (black);
 }
 
-bool BMPImage::setPixel(const int32_t x, const int32_t y, const RGBPIXEL& color) {
+bool BMPImage::setPixel(const int32 x, const int32 y, const RGBPIXEL& color) {
 
 	if (isValid(x, y)) {
 		this->data[x + (this->infoHeader->height - y) * this->infoHeader->width] = color;
@@ -209,8 +209,8 @@ bool BMPImage::setPixel(const int32_t x, const int32_t y, const RGBPIXEL& color)
 
 void BMPImage::Clear() {
 
-	if (this->fileHeader != nullptr && this->infoHeader != nullptr && this->data != nullptr) {
-		for (int64_t i = 0; i < this->infoHeader->width * this->infoHeader->height; i++) {
+	if (this->fileHeader != NULL && this->infoHeader != NULL && this->data != NULL) {
+		for (int64 i = 0; i < this->infoHeader->width * this->infoHeader->height; i++) {
 			this->data[i].B = 0;
 			this->data[i].R = 0;
 			this->data[i].G = 0;
@@ -220,9 +220,31 @@ void BMPImage::Clear() {
 
 void BMPImage::Clear(const RGBPIXEL& color) {
 
-	if (this->fileHeader != nullptr && this->infoHeader != nullptr && this->data != nullptr) {
-		for (int64_t i = 0; i < this->infoHeader->width * this->infoHeader->height; i++) {
+	if (this->fileHeader != NULL && this->infoHeader != NULL && this->data != NULL) {
+		for (int64 i = 0; i < this->infoHeader->width * this->infoHeader->height; i++) {
 			this->data[i] = color;
+		}
+	}
+}
+
+void BMPImage::negative() {
+
+	if (this->fileHeader != NULL && this->infoHeader != NULL && this->data != NULL) {
+		for (int64 i = 0; i < this->infoHeader->width * this->infoHeader->height; i++) {
+			this->data[i].B -= 255;
+			this->data[i].R -= 255;
+			this->data[i].G -= 255;
+		}
+	}
+}
+
+void BMPImage::binarize(const uint8 threshold) {
+
+	if (this->fileHeader != NULL && this->infoHeader != NULL && this->data != NULL) {
+		for (int64 i = 0; i < this->infoHeader->width * this->infoHeader->height; i++) {
+			this->data[i].B = this->data[i].B >= threshold ? 255 : 0;
+			this->data[i].R = this->data[i].R >= threshold ? 255 : 0;
+			this->data[i].G = this->data[i].G >= threshold ? 255 : 0;
 		}
 	}
 }

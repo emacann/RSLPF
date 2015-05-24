@@ -149,6 +149,7 @@
   <ItemGroup>
     <ClInclude Include="BMPImage.h" />
     <ClInclude Include="RSLPF.h" />
+    <ClInclude Include="STDHeader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
